@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>История систем счисления</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            color: #ffffff;
+        }
+
+        .systems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .system-card {
+            background: #2d2d2d;
+            border-radius: 8px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #404040;
+        }
+
+        .system-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .system-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: relative;
+            background: #2d2d2d;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            border-radius: 8px;
+            animation: modalOpen 0.3s ease;
+        }
+
+        @keyframes modalOpen {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #ffffff;
+        }
+
+        .system-info h2 {
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .system-info p {
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>История систем счисления</h1>
+        <div class="systems-grid" id="systemsContainer"></div>
+    </div>
+
+    <div class="modal" id="infoModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div class="system-info" id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const systems = [
+            {
+                title: "Египетская система",
+                info: "Использовала иероглифы для обозначения степеней числа 10. Появилась около 3000 г. до н.э.",
+                period: "3000 г. до н.э. - 100 г. н.э.",
+                region: "Древний Египет"
+            },
+            {
+                title: "Вавилонская система",
+                info: "Шестидесятеричная система счисления с основанием 60. Использовала клинописные знаки.",
+                period: "2000 г. до н.э. - 100 г. н.э.",
+                region: "Месопотамия"
+            },
+            {
+                title: "Римская система",
+                info: "Комбинация буквенных символов: I, V, X, L, C, D, M. Непозиционная система счисления.",
+                period: "VIII век до н.э. - настоящее время",
+                region: "Римская империя"
+            },
+            {
+                title: "Система Майя",
+                info: "Двадцатеричная система с использованием нуля. Включала три символа: ракушка (ноль), точки и черты.",
+                period: "IV век до н.э. - XVI век",
+                region: "Мезоамерика"
+            },
+            {
+                title: "Десятичная система",
+                info: "Позиционная система с основанием 10 с использованием цифр 0-9. Стала стандартом благодаря арабам.",
+                period: "IX век - настоящее время",
+                region: "Индия/Арабский мир"
+            },
+            {
+                title: "Двоичная система",
+                info: "Основа современной компьютерной техники. Использует только две цифры: 0 и 1.",
+                period: "XVII век - настоящее время",
+                region: "Европа/Весь мир"
+            }
+        ];
+
+        function createSystemCards() {
+            const container = document.getElementById('systemsContainer');
+            
+            systems.forEach(system => {
+                const card = document.createElement('div');
+                card.className = 'system-card';
+                card.innerHTML = `
+                    <h3 class="system-title">${system.title}</h3>
+                    <p>Период: ${system.period}</p>
+                    <p>Регион: ${system.region}</p>
+                `;
+                
+                card.addEventListener('click', () => showInfo(system));
+                container.appendChild(card);
+            });
+        }
+
+        function showInfo(system) {
+            const modal = document.getElementById('infoModal');
+            const content = document.getElementById('modalContent');
+            
+            content.innerHTML = `
+                <h2>${system.title}</h2>
+                <p>${system.info}</p>
+                <p><strong>Период использования:</strong> ${system.period}</p>
+                <p><strong>Регион:</strong> ${system.region}</p>
+            `;
+            
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('infoModal').style.display = 'none';
+        }
+
+        // Закрытие модального окна при клике вне его
+        window.onclick = function(event) {
+            const modal = document.getElementById('infoModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Инициализация при загрузке страницы
+        window.onload = createSystemCards;
+    </script>
+</body>
+</html>
